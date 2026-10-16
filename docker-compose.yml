@@ -1,0 +1,19 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: sio_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: sio_db
+      POSTGRES_USER: sio_user
+      POSTGRES_PASSWORD: sio_password
+    ports:
+      - "5432:5432"
+    volumes:
+      # 1. Monta lo script SQL per l'esecuzione automatica al primo avvio
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
+      # 2. Crea un volume persistente per non perdere i dati se il container si spegne
+      - sio_pgdata:/var/lib/postgresql/data
+
+volumes:
+  sio_pgdata:
